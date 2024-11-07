@@ -4,3 +4,8 @@ main: io.github.enriquegambra.mcrtag.MCRTagPlugin
 description: A plugin that allows you to play a simple game of tag
 author: enriquegambra
 api-version: '1.21.1'
+commands:
+  tag:
+    description: "This is the base command for tag."
+    usage: "/tag"
+    aliases: [tag]
