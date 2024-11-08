@@ -1,9 +1,12 @@
 package io.github.enriquegambra.mcrtag.commands;
 
+import io.github.enriquegambra.mcrtag.data.DataPersistance;
+import io.github.enriquegambra.mcrtag.entity.PlayerSession;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 
@@ -35,7 +38,7 @@ public class TagCommand implements BasicCommand {
                 handleInitTagCommand(commandSourceStack);
             }
             case JOIN: {
-                handleJoinTagCommand(commandSourceStack);
+                handleJoinTagCommand(arguments, commandSourceStack);
             }
             case DECLINE: {
                 handleDeclineTagCommand(commandSourceStack);
@@ -50,6 +53,8 @@ public class TagCommand implements BasicCommand {
 
     private void handleInitTagCommand(CommandSourceStack commandSourceStack) {
 
+        String sessionGuid = DataPersistance.createTagSessionAndReturnGUID();
+
         commandSourceStack.getSender().sendPlainMessage("Tag has been initialized! All players have " +
                 "5 minutes to accept to join the game!.");
 
@@ -58,13 +63,35 @@ public class TagCommand implements BasicCommand {
 
         final Component sendMessageToAllPlayersComponent = text()
                 .content(TAG_INIT_MESSAGE)
+                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/tag join " + sessionGuid))
                 .color(TextColor.color(GREEN))
                 .build();
 
         audience.sendMessage(sendMessageToAllPlayersComponent);
     }
 
-    private void handleJoinTagCommand(CommandSourceStack commandSourceStack) {
+    private void handleJoinTagCommand(String[] arguments, CommandSourceStack commandSourceStack) {
+
+        if (arguments.length != 2) {
+
+            commandSourceStack.getSender().sendPlainMessage("Please provide the tag session's GUID to be able to join the game!");
+
+            return;
+        }
+
+        String sessionGuid = arguments[1];
+
+        if (!DataPersistance.hasTagSession(sessionGuid)) {
+
+            commandSourceStack.getSender().sendPlainMessage("Tag session provided is not valid! Please try again.");
+
+            return;
+        }
+
+        PlayerSession player =
+            new PlayerSession(commandSourceStack.getExecutor().getUniqueId(), commandSourceStack.getExecutor().getName());
+
+        DataPersistance.addPlayerToTagSession(player.getUuid().toString(), player);
 
     }
 
