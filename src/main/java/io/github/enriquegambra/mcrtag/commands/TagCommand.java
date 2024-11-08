@@ -30,7 +30,7 @@ public class TagCommand implements BasicCommand {
         }
 
 
-        TagCommandType commandType = TagCommandType.valueOf(arguments[0]);
+        TagCommandType commandType = TagCommandType.getEnumValue(arguments[0]);
 
         switch (commandType) {
 
