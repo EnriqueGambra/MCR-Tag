@@ -15,11 +15,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Hello world!
  *
  */
-public class MCRTagPlugin extends JavaPlugin implements Listener
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+public class MCRTagPlugin extends JavaPlugin implements Listener {
+
+    public static void main(String[] args) {
+
     }
 
     @Override

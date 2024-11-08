@@ -26,20 +26,25 @@ public class TagCommand implements BasicCommand {
             return;
         }
 
-        String firstArgument = arguments[0];
 
-        if (firstArgument.equalsIgnoreCase("init")) {
+        TagCommandType commandType = TagCommandType.valueOf(arguments[0]);
 
-            handleInitTagCommand(commandSourceStack);
+        switch (commandType) {
 
-        }
-        else {
-
-            commandSourceStack.getSender().sendPlainMessage(firstArgument + " is not a valid argument. Please use /help MCRTagPlugin " +
+            case INIT: {
+                handleInitTagCommand(commandSourceStack);
+            }
+            case JOIN: {
+                handleJoinTagCommand(commandSourceStack);
+            }
+            case DECLINE: {
+                handleDeclineTagCommand(commandSourceStack);
+            }
+            default: {
+                commandSourceStack.getSender().sendPlainMessage(arguments[0] + " is not a valid argument. Please use /help MCRTagPlugin " +
                     "to view a list of valid arguments.");
-
+            }
         }
-
 
     }
 
@@ -57,6 +62,14 @@ public class TagCommand implements BasicCommand {
                 .build();
 
         audience.sendMessage(sendMessageToAllPlayersComponent);
+    }
+
+    private void handleJoinTagCommand(CommandSourceStack commandSourceStack) {
+
+    }
+
+    private void handleDeclineTagCommand(CommandSourceStack commandSourceStack) {
+
     }
 
 }

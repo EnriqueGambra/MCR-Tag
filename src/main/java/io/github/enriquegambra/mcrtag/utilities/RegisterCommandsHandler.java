@@ -15,8 +15,6 @@ public class RegisterCommandsHandler {
 
             final Commands commands = event.registrar();
 
-            System.out.println("Event Handler Registration: ");
-
             commands.register("tag", "Base command for all tag related activities", new TagCommand());
         });
 
