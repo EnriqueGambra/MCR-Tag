@@ -69,9 +69,8 @@ public class TagSessionEntity {
 
     public boolean isPlayerAlreadyInGame(String playerGUID) {
 
-//        return players.containsKey(playerGUID);
+        return players.containsKey(playerGUID);
 
-        return false;
     }
 
     public String getElapsedTimeTillGameStarts() {
