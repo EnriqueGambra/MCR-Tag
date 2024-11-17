@@ -2,6 +2,7 @@ package io.github.enriquegambra.mcrtag.commands;
 
 import io.github.enriquegambra.mcrtag.data.DataPersistance;
 import io.github.enriquegambra.mcrtag.entity.PlayerSession;
+import io.github.enriquegambra.mcrtag.entity.TagSessionEntity;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.audience.ForwardingAudience;
@@ -36,16 +37,20 @@ public class TagCommand implements BasicCommand {
 
             case INIT: {
                 handleInitTagCommand(commandSourceStack);
+                break;
             }
             case JOIN: {
                 handleJoinTagCommand(arguments, commandSourceStack);
+                break;
             }
             case DECLINE: {
                 handleDeclineTagCommand(commandSourceStack);
+                break;
             }
             default: {
                 commandSourceStack.getSender().sendPlainMessage(arguments[0] + " is not a valid argument. Please use /help MCRTagPlugin " +
                     "to view a list of valid arguments.");
+                break;
             }
         }
 
@@ -91,7 +96,22 @@ public class TagCommand implements BasicCommand {
         PlayerSession player =
             new PlayerSession(commandSourceStack.getExecutor().getUniqueId(), commandSourceStack.getExecutor().getName());
 
-        DataPersistance.addPlayerToTagSession(player.getUuid().toString(), player);
+        try {
+
+            DataPersistance.addPlayerToTagSession(sessionGuid, player);
+
+        }
+        catch (RuntimeException exception) {
+
+            commandSourceStack.getSender().sendPlainMessage(exception.getMessage());
+
+            return;
+        }
+
+        TagSessionEntity tagSessionEntity = DataPersistance.getTagSession(sessionGuid);
+
+        commandSourceStack.getSender().sendPlainMessage("Successfully joined the game! There are " + tagSessionEntity.getElapsedTimeTillGameStarts()
+            + " until the game begins.");
 
     }
 

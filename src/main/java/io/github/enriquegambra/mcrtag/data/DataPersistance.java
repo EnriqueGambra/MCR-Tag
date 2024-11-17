@@ -36,8 +36,27 @@ public class DataPersistance {
 
     public static void addPlayerToTagSession(String sessionGuid, PlayerSession playerSession) {
 
-        tagSessionsMap.get(sessionGuid).addPlayer(playerSession.getUuid().toString(), playerSession);
+        TagSessionEntity tagSessionEntity = tagSessionsMap.get(sessionGuid);
 
+        if (tagSessionEntity.isPlayerAlreadyInGame(playerSession.getUuid().toString())) {
+
+            throw new RuntimeException("You have already joined this session of tag!");
+
+        }
+
+        tagSessionEntity.addPlayer(playerSession.getUuid().toString(), playerSession);
+
+    }
+
+    public static TagSessionEntity getTagSession(String sessionGuid) {
+
+        if (!tagSessionsMap.containsKey(sessionGuid)) {
+
+           throw new RuntimeException("No tag session found for guid: " + sessionGuid);
+
+        }
+
+        return tagSessionsMap.get(sessionGuid);
     }
 
 
